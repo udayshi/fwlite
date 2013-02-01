@@ -3,9 +3,9 @@
 
 
 $config['hostname'] = 'localhost';
-$config['username'] = 'root';
-$config['password'] = 'root';
-$config['database'] = 'widget_hub_firenze';
+$config['username'] = 'user';
+$config['password'] = 'password';
+$config['database'] = 'fwlite';
 $config['dbdriver'] = 'mysql';
 
 $config['active_group'] ='default';
