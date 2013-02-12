@@ -1,9 +1,36 @@
 <?php
+/**
+ * FwLite
+ *
+ * An open source application development framework for PHP 5.1.6 or newer
+ *
+ * @package		FwLite
+ * @author		Uday Shiwakoti
+ * @copyright           Copyright (c) 2010 - 2013, Shiwakoti Consultancy
+ * @license		http://fwlite.userfor.com/user_guide/license.html
+ * @link		http://fwlite.usforweb.com
+ * @since		Version 1.0
+ * @filesource
+ */
 
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
+
+/**
+ * FwLite Bootstrap Class
+ *
+ * @package	FwLite
+ * @subpackage	Libraries
+ * @category	Libraries
+ * @author	Uday Shiwakoti
+ * @link	http://fwlite.usforweb.com/user_guide/libraries/bootstrap.html
+ */
 class BootStrap{
     static $config;
  
     ###############################################
+
+    
     static function autoload($clsname=NULL){
        
         foreach(self::$config->dir as $dir){
@@ -213,4 +240,3 @@ class BootStrap{
 
 
 
-?>
