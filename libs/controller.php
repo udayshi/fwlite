@@ -34,31 +34,96 @@ class Controller extends Core{
   private $method=NULL;
   private $plugin=NULL;
   protected $view=NULL;
-  private $hooks=array();
-  private $is_hook_enabled=false;
-  
-  
- 
- 
-    
-   
+  private $is_plugin_enabled=false;
+  protected $_get=NULL,$_post=NULL,$_files=NULL,$_session=NULL,$_request=NULL;
+
+
+
+
+
+
+
+
+
+
   function __construct() {
     
       parent::__construct();
-      if($this->is_hook_enabled){
-        Myplugin::doHello();
-      }
+      
+                if(BootStrap::isPluginEnabled()){
+                    $this->firePlugin('pre_dispatch');
+                }
+               
+                //Myplugin::doHello();
+      
+      $this->setupRequestObjects();
       $this->preDispatch();
       $this->view=new View();
       
   }
   
-  function enableHook(){
+  
+private  function loadPlugin($clsName=NULL){
+      $plugin_dir=  BootStrap::getPluginDir();
+     $require_file=$plugin_dir.'/'.strtolower($clsName).'.php';
+     if(file_exists($require_file)){
+        require_once $require_file;
       
-      $this->is_hook_enabled=true;
+     }else{
+         die('No '.$require_file.' Found');
+     }
+     
   }
-  function disableHook(){
-      $this->is_hook_enabled=false;
+  
+  private function firePlugin($state='pre_dispatch'){
+        
+                $config=Config::getInstance();
+             $config->load('plugin');
+            $data= $config->get('plugin');
+            # print_r($config);
+            $plugin_dir=  BootStrap::getPluginDir();
+            if(isset($data[$state])){
+            foreach($data[$state] as $row){
+                    $class=$row['class'];
+                    $this->loadPlugin($class);
+                    if(is_array($row['methods'])){
+                        foreach($row['methods'] as $method=>$args){
+                           if(is_array($args)){
+                            $class::$method($args);
+                           }
+                        }
+                    }
+                        //$this->firePlugin($row['class']
+            }
+           }
+  }
+
+  
+  private function setupRequestObjects(){
+      if(isset($_FILES))
+        $this->_files=&$_FILES;
+      
+      if(isset($_POST))
+        $this->_post=&$_POST;
+      
+      
+      if(isset($_SESSION))
+        $this->_post=&$_SESSION;
+      
+      if(isset($_REQUEST))
+        $this->_request=&$_REQUEST;
+      
+      if(isset($_GET))
+        $this->_get=&$_GET;
+      
+  }
+  
+  function enablePlugin(){
+      
+      $this->is_plugin_enabled=true;
+  }
+  function disablePlugin(){
+      $this->is_plugin_enabled=false;
   }
   
   function preDispatch(){
@@ -124,8 +189,8 @@ class Controller extends Core{
           
       }   
       $this->postDispatch();
-      if($this->is_hook_enabled){          
-        Myplugin::doHello();
+      if(BootStrap::isPluginEnabled()){
+                    $this->firePlugin('post_dispatch');
       }
       #print_r(get_included_files());
   }

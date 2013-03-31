@@ -1,5 +1,5 @@
 <?php
-$doc_root=$_SERVER['DOCUMENT_ROOT'].'/fwtest/';
+$doc_root=$_SERVER['DOCUMENT_ROOT'].'/fwlite/';
 $app_base=$doc_root.'application/';
 $libs_base=$doc_root.'libs/';
 

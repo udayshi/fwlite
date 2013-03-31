@@ -30,7 +30,13 @@ class BootStrap{
  
     ###############################################
 
-    
+    /**
+    * Auto load enviroment setup
+    * @param $clsName 
+    *  
+    * @access      public
+    * @return	void
+    */
     static function autoload($clsname=NULL){
        
         foreach(self::$config->dir as $dir){
@@ -43,6 +49,13 @@ class BootStrap{
     }
 
     ###############################################
+    
+    /**
+    * Load the core files of FwLite 
+    * @access      private
+    * @return	void
+    */
+
     private static function setupCore(){
         
         
@@ -70,8 +83,17 @@ class BootStrap{
         
     }
     ###############################################
+    /**
+     * Setup the default environment directory if not setup
+     * @access      private
+     * @return	void
+     */
     
-     private static function setupEnv(){
+     
+    private static function setupEnv(){
+        if(!isset(self::$config->plugin))
+            self::$config->plugin=false;
+        
         if(!isset(self::$config->dir['document_root']))
             self::$config->dir['document_root']=$_SERVER['DOCUMENT_ROOT'].'/';
         
@@ -98,9 +120,34 @@ class BootStrap{
           
           if(!isset(self::$config->dir['plugin']))
             self::$config->dir['plugin']=self::$config->dir['application'].'plugins/';
+   
+          
     }
     
+
+    static function enablePlugin(){
+        self::$config->plugin=true;
+    }
+    
+    
+    static function disablePlugin(){
+        self::$config->plugin=false;
+    }
+    
+    static function isPluginEnabled(){
+        return self::$config->plugin;
+    }
     ###############################################    
+    /**
+     * Returns the config directory name
+     * 
+     * @param $key string
+     * 
+     * @access      public
+     * @return	string
+     */
+
+    
     static function getConfigDir($key=NULL){
         if(isset($key)){
             if(isset(self::$config->dir[$key]))
@@ -112,74 +159,206 @@ class BootStrap{
         }
         
     }
-    
+ 
+    /**
+    * Returns the view directory name
+    * @access      public
+    * @return	string
+    */
+
     static function getViewDir(){
         return self::$config->dir['view'];
     }
     
     ###############################################    
+    /**
+    * Sets the document root
+     * 
+     *@param $dir string
+     * 
+    * @access      public
+    * @return	void
+    */
     
     static function setDocumentRoot($dir=NULL){
         self::$config->dir['document_root']=$dir;
     }
-    
+
+     /**
+ * Sets the system Dir
+ * 
+  *@param $dir string
+  * 
+ * @access      public
+ * @return	void
+ */
     static function setSystemDir($dir=NULL){
         self::$config->dir['system']=$dir;
     }
     
+
+    
+    /**
+    * Returns the system directory name
+    * @access      public
+    * @return	string
+    */   
+
     static function getSystemDir(){
         return  self::$config->dir['system'];
     }
     
-     static function setLibDir($dir=NULL){
+     /**
+    * Sets the lib Dir
+    * 
+    * @param $dir string
+    * 
+    * @access      public
+    * @return	void
+    */
+
+    static function setLibDir($dir=NULL){
         self::setSystemDir($dir);
     }
+
+        
+   /**
+ * Sets the Application Dir
+ * 
+ * @param $dir string
+ * 
+ * @access      public
+ * @return	void
+ */
+
     
     static function setApplicationDir($dir=NULL){
         self::$config->dir['application']=$dir;
     }
     ###############################################
-     static function setConfigDir($dir=NULL){
+    /**
+    * Sets the config Dir
+    * 
+    * @param $dir string
+    * 
+    * @access      public
+    * @return	void
+    */
+
+    static function setConfigDir($dir=NULL){
         self::$config->dir['config']=$dir;
     }
     
+    /**
+    * Sets the controller Dir
+    * 
+    * @param $dir string
+    * 
+    * @access      public
+    * @return	void
+    */
     static function setControllerDir($dir=NULL){
         self::$config->dir['controller']=$dir;
     }
     
+
+        
+    /**
+     * Sets the controller Dir
+     * 
+     * @param $dir string
+     * 
+     * @access      public
+     * @return	void
+     */     
+
     static function setModelDir($dir=NULL){
         self::$config->dir['model']=$dir;
     }
+
     
+    /**
+    * Sets the view Dir
+    * 
+    * @param $dir string
+    * 
+    * @access      public
+    * @return	void
+    */   
+
     static function setViewDir($dir=NULL){
         self::$config->dir['view']=$dir;
     }
     
- 
+    /**
+    * Sets the template Dir
+    * 
+    * @param $dir string
+    * 
+    * @access      public
+    * @return	void
+    */
+
     static function setTemplateDir($dir=NULL){
         self::$config->dir['template']=$dir;
     }
-     static function getTemplateDir(){
+
+    /**
+     * Returns the location of template.
+     * 
+     * @return string
+     */
+    static function getTemplateDir(){
         return self::$config->dir['template'];
     }
-    
+   
+    /**
+    * Sets the plugin Dir
+    * 
+    * @param $dir string
+    * 
+    * @access      public
+    * @return	void
+    */
+
     static function setPluginDir($dir=NULL){
         self::$config->dir['plugin']=$dir;
     }
-    
-    static function getPluginDir($dir=NULL){
+    /**
+     * Returns the location fo plugin dir
+     * 
+     * @return string
+     */
+    static function getPluginDir(){
         return self::$config->dir['plugin'];
     }
     ###############################################
+    
+    /**
+     *  Set Mvc information 
+     * 
+     * @param info array
+     * 
+     * 
+     */
     
     static function setMVCInfo($info=array()){
         self::$config->info['mvc']=$info;
     }
     
+    /**
+     * Returns the current mvc information.
+     * @return array
+     */
+    
     static function getMVCInfo(){
         return self::$config->info['mvc'];
     }
     
+    /**
+     * Set up the bootstrap and dispatch.
+     * @param type $info
+     */
     static function dispatch($info=array()){
             self::setupEnv();
             self::setupCore();
@@ -187,28 +366,43 @@ class BootStrap{
              $config=Config::getInstance();
              $config->load('config');
              $data= $config->get('config');
+          
+          if(isset($data['display_error']) && $data['display_error']){
+             error_reporting(E_ALL);
+             ini_set('display_errors', 1);
+          }else{
+              error_reporting(0);
+              ini_set('display_errors', 0);
+          }
+       
+          if(isset($data['use_session']) && $data['use_session']){
+              session_start();
+          }    
+            if(isset($data['use_plugin']) && $data['use_plugin'])
+                    self::enablePlugin();
+             
              unset($config);
              
-          
+         
+             
+         
      
 
             if(isset($_SERVER['QUERY_STRING'])){
-                $query_str=trim($_SERVER['QUERY_STRING']);
-                $query_str=$query_str;
-                $requests=explode('/',str_replace('^/', '/', $query_str));
-                $i=0;
-                if(isset($_GET))
-                    unset($_GET);
-                if($_SERVER['REQUEST_METHOD']=='POST'){
-                    $mvc_info=$_POST;
-                    unset($_POST);
-                }
                 
                 $mvc_info['controller']=$data['default_controller'];
                 $mvc_info['action']=$data['default_action'];
                   
-                  
-                foreach($requests as $request){
+                if(isset($data['use_get']) && $data['use_get']){
+                    $requests=$_GET;
+                }else{
+                    $query_str=trim($_SERVER['QUERY_STRING']);
+                    $query_str=$query_str;
+                    $requests=explode('/',str_replace('^/', '/', $query_str));
+               
+                    $i=0;
+                
+                    foreach($requests as $request){
                         if($request=='')
                             continue;
 
@@ -224,17 +418,26 @@ class BootStrap{
 
                  $i++;   
                 }
+                    unset($_GET);
+               }  
+                
             }
             
             self::setMVCInfo($mvc_info);
             
             $class=$mvc_info['controller'];
             $method=$mvc_info['action'];
-
+            $file=self::$config->dir['controller'].'/'.$class.'.php';
+            #echo $file;
+            if(file_exists($file)){
             $obj_controller=new $class;
             #$obj_controller->enableHook();
             $obj_controller->setView(strtolower($method));
             call_user_func(array($obj_controller, $method));
+            }else{
+                echo 'Invalid Request';
+                exit;
+            }
     }
 }
 

@@ -7,8 +7,42 @@ and open the template in the editor.
     <head>
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script  src="/fwlite/public/javascript/jquery.js"> </script>
     </head>
     <body>
+        <script>
+            jQuery(document).ready(
+    function(){
+     //   alert('ok');
+        jQuery('#mytbl td').click(
+                function(){
+                   var html='<input type="text" name="mytxt" class="jqtext" value="'+jQuery(this).html()+'" />';
+                 jQuery(this).html(html);
+                }
+            
+            );
+        }    
+    );
+        </script>
+        <style>
+            #mytbl{
+                
+            }
+            #mytbl td{
+                padding:0px;
+                cursor: pointer;
+                border:1px solid black;
+            }
+        </style>
+        <table id="mytbl">
+            <tr><td>Ro1</td> <td>Row 2</td><td>Row 3</td> </tr>
+            <tr><td>Ro1</td> <td>Row 2</td><td>Row 3</td> </tr>
+            <tr><td>Ro1</td> <td>Row 2</td><td>Row 3</td> </tr>
+            <tr><td>Ro1</td> <td>Row 2</td><td>Row 3</td> </tr>
+            
+            
+            
+        </table>
         <div><?php
            echo $hello;
             ?></div>
