@@ -1,2 +1,2 @@
 This is framework lite.
-Commit next test change
+Commit next test change changed
